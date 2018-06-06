@@ -1,8 +1,0 @@
-apply plugin: "kotlin-platform-js"
-
-dependencies {
-    def common = project(":common")
-    compile common
-    expectedBy common
-    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
-}
