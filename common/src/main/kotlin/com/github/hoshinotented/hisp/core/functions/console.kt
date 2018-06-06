@@ -11,16 +11,16 @@ abstract class AbstractPutStr(name : String, val out : HispWriter) : HispFunctio
 
 	protected abstract fun append(str : CharSequence)
 
-	private fun putStr(globals : HispNameSpace, str : HispObject?) {
+	private fun putStr(namespace : HispNameSpace, str : HispObject?) {
 		str ?: throw HispNoSuchFieldException(hispSymbol("str"), data)
 
 		when (str) {
 			is HispSymbol -> {
-				putStr(globals, globals[str]?.eval(globals, emptyHispMap))
+				putStr(namespace, namespace[str]?.eval(namespace))
 			}
 
 			is HispList -> {
-				putStr(globals, str.eval(globals, emptyHispMap))
+				putStr(namespace, str.eval(namespace))
 			}
 
 			is HispString, is HispFunction, is HispNumber -> {
@@ -29,12 +29,12 @@ abstract class AbstractPutStr(name : String, val out : HispWriter) : HispFunctio
 		}
 	}
 
-	override fun eval(globals : HispNameSpace, args : HispNameSpace) : HispObject = eval(args) {
-		val str = args[hispSymbol("str")]!!
+	override fun eval(namespace : HispNameSpace) : HispObject {
+		val str = namespace[hispSymbol("str")]!!
 
-		putStr(globals, str)
+		putStr(namespace, str)
 
-		str
+		return str
 	}
 }
 

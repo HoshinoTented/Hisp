@@ -9,5 +9,5 @@ val emptyHispMap get() = hispNameSpace(emptyMap<HispSymbol, HispObject>().toMuta
 fun hispSymbol(name : String) = HispSymbol(name, internalData)
 fun hispList(vararg elements : HispObject) = HispList(elements.toList(), internalData)
 fun hispString(value : String) = HispString(value, internalData)
-fun hispNameSpace(map : MutableMap<HispSymbol, HispObject>) = HispNameSpace(map, internalData)
+fun hispNameSpace(map : MutableMap<HispSymbol, HispObject>) = HispNameSpace(map, null, internalData)
 fun hispNumber(value : Double) = HispNumber(value, internalData)

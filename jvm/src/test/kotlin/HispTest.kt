@@ -107,7 +107,7 @@ class HispTest {
 		installCoreFunctions(namespace)
 		installConsoleFunctions(namespace, HispWriter(out))
 
-		executable.eval(namespace, emptyHispMap)
+		executable.eval(namespace)
 
 		assertEquals("3.0", out.toString())
 	}

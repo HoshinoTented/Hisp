@@ -9,8 +9,11 @@ import java.io.OutputStreamWriter
 
 fun main(args : Array<String>) {
 	val code = """
-		(defun sayHelloWorld () (putStrLn "Hello world!"))
-		(sayHelloWorld)
+		(setq a 1)
+		(setq b 2)
+		(defun add (a b)
+			(+ a b))
+		(putStrLn (add a b))
 	""".trimIndent()
 
 	val namespace = hispNameSpace(mutableMapOf())
@@ -21,5 +24,5 @@ fun main(args : Array<String>) {
 	installCoreFunctions(namespace)
 	installConsoleFunctions(namespace, HispWriter(OutputStreamWriter(System.out)))
 
-	executable.eval(namespace, emptyHispMap)
+	executable.eval(namespace)
 }
