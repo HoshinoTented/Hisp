@@ -37,11 +37,19 @@ open class HispNameSpace(val map : MutableMap<HispSymbol, HispObject>, val paren
 
 	override fun put(key : HispSymbol, value : HispObject) : HispObject? = (parent ?: map).put(key, value)
 
+	override fun remove(key : HispSymbol) : HispObject? {
+		map.remove(key)
+		parent?.remove(key)
+
+		return null
+	}
+
 	override fun eval(namespace : HispNameSpace) : HispObject {
 		TODO()
 	}
 }
 
+// 这个应该被称为 `引用`
 open class HispSymbol(val value : String, data : MetaData) : HispObject(data) {
 	override fun eval(namespace : HispNameSpace) : HispObject {
 		var value : HispObject? = namespace[this]

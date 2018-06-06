@@ -23,7 +23,7 @@ object DefineFunction : HispFunction(
 }
 
 object SetQ : HispFunction(
-	hispSymbol("setq"),
+	hispSymbol("set"),
 	hispList(
 		hispSymbol("name"),
 		hispSymbol("target")),
@@ -36,6 +36,21 @@ object SetQ : HispFunction(
 			is HispSymbol -> namespace[target] ?: throw HispNoSuchFieldException(target, target.data)
 			else -> target
 		}
+
+		return name
+	}
+}
+
+object DelQ : HispFunction(
+	hispSymbol("del"),
+	hispList(
+		hispSymbol("name")
+	),
+	emptyHispList, internalData) {
+	override fun eval(namespace : HispNameSpace) : HispObject {
+		val name = namespace[parameters.values[0]]!!.cast<HispSymbol>()
+
+		namespace.remove(name)
 
 		return name
 	}
@@ -64,10 +79,11 @@ object Minus : Compute("-", Double::minus)
 object Times : Compute("*", Double::times)
 object Div : Compute("/", Double::div)
 
-fun installCoreFunctions(globals : HispNameSpace) {
+fun installCorePlugins(globals : HispNameSpace) {
 	listOf(
 		DefineFunction,
 		SetQ,
+		DelQ,
 		Add,
 		Minus,
 		Times,

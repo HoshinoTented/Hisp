@@ -1,25 +1,28 @@
 @file:Suppress("LocalVariableName", "unused")
 
 import com.github.hoshinotented.hisp.core.*
-import com.github.hoshinotented.hisp.core.HispWriter
-import com.github.hoshinotented.hisp.core.functions.installConsoleFunctions
-import com.github.hoshinotented.hisp.core.functions.installCoreFunctions
+import com.github.hoshinotented.hisp.core.functions.installCommentPlugins
+import com.github.hoshinotented.hisp.core.functions.installConsolePlugins
+import com.github.hoshinotented.hisp.core.functions.installCorePlugins
 import com.github.hoshinotented.hisp.parser.HispLexer
 import com.github.hoshinotented.hisp.parser.HispParser
 import com.github.hoshinotented.hisp.parser.HispToken
 import com.github.hoshinotented.hisp.parser.HispTokenType
 import org.junit.Test
-import java.io.OutputStreamWriter
 import java.io.StringWriter
 import kotlin.test.assertEquals
 
 class HispTest {
 	companion object {
 		private val code = """
+		(set a 1)
+		(set b 2)
 		(defun add (a b)
 			(+ a b))
 
-		(putStr (add 1 2))
+		(putStrLn (add a b))
+		(# "putStr will be invalid")
+		(putStr b)
 	""".trimIndent()
 	}
 
@@ -38,6 +41,18 @@ class HispTest {
 		assertEquals(
 			listOf(
 				L_PAREN,
+				symbol("set"),
+				symbol("a"),
+				symbol("1"),
+				R_PAREN,
+
+				L_PAREN,
+				symbol("set"),
+				symbol("b"),
+				symbol("2"),
+				R_PAREN,
+
+				L_PAREN,
 				symbol("defun"),
 				symbol("add"),
 
@@ -51,18 +66,31 @@ class HispTest {
 				symbol("a"),
 				symbol("b"),
 				R_PAREN,
+
+				R_PAREN,
+
+				L_PAREN,
+				symbol("putStrLn"),
+
+				L_PAREN,
+				symbol("add"),
+				symbol("a"),
+				symbol("b"),
+				R_PAREN,
+
+				R_PAREN,
+
+				L_PAREN,
+				symbol("#"),
+				string("putStr will be invalid"),
 				R_PAREN,
 
 				L_PAREN,
 				symbol("putStr"),
-
-				L_PAREN,
-				symbol("add"),
-				symbol("1"),
-				symbol("2"),
-				R_PAREN,
+				symbol("b"),
 				R_PAREN
-			), lexer.startLex()
+			),
+			lexer.startLex()
 		)
 	}
 
@@ -76,6 +104,18 @@ class HispTest {
 			HispExecutable(
 				listOf(
 					hispList(
+						hispSymbol("set"),
+						hispSymbol("a"),
+						hispSymbol("1")
+					),
+
+					hispList(
+						hispSymbol("set"),
+						hispSymbol("b"),
+						hispSymbol("2")
+					),
+
+					hispList(
 						hispSymbol("defun"),
 						hispSymbol("add"),
 						hispList(
@@ -88,8 +128,18 @@ class HispTest {
 					),
 
 					hispList(
+						hispSymbol("putStrLn"),
+						hispList(hispSymbol("add"), hispSymbol("a"), hispSymbol("b"))
+					),
+
+					hispList(
+						hispSymbol("#"),
+						hispString("putStr will be invalid")
+					),
+
+					hispList(
 						hispSymbol("putStr"),
-						hispList(hispSymbol("add"), hispSymbol("1"), hispSymbol("2"))
+						hispSymbol("b")
 					)
 				)
 			), executable
@@ -104,11 +154,12 @@ class HispTest {
 		val executable = parser.startParse()
 		val out = StringWriter()
 
-		installCoreFunctions(namespace)
-		installConsoleFunctions(namespace, HispWriter(out))
+		installCorePlugins(namespace)
+		installCommentPlugins(namespace)
+		installConsolePlugins(namespace, HispWriter(out))
 
 		executable.eval(namespace)
 
-		assertEquals("3.0", out.toString())
+		assertEquals("3.0\n2.0", out.toString())
 	}
 }

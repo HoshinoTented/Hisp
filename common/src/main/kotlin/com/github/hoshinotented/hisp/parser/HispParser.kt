@@ -20,8 +20,8 @@ class HispParser(val lexer : HispLexer) {
 		currentIndex++
 	}
 
-	fun startParse() : HispObject {
-		tokens = lexer.startLex()
+	fun startParse(tokens : List<HispToken>) : HispObject {
+		this.tokens = tokens
 		currentIndex = 0
 
 		return ArrayList<HispObject>().apply {
@@ -31,6 +31,8 @@ class HispParser(val lexer : HispLexer) {
 			}
 		}.run(::HispExecutable)
 	}
+
+	fun startParse() : HispObject = startParse(lexer.startLex())
 
 	private fun parseToken() : HispObject {
 		return when (currentToken.type) {

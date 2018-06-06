@@ -52,7 +52,7 @@ class PutStrLn(out : HispWriter) : AbstractPutStr("putStrLn", out) {
 	}
 }
 
-fun installConsoleFunctions(namespace : HispNameSpace, out : HispWriter) {
+fun installConsolePlugins(namespace : HispNameSpace, out : HispWriter) {
 	listOf(
 		PutStr(out),
 		PutStrLn(out)
