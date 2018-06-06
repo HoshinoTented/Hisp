@@ -45,7 +45,7 @@ open class HispNameSpace(val map : MutableMap<HispSymbol, HispObject>, val paren
 	}
 
 	override fun eval(namespace : HispNameSpace) : HispObject {
-		TODO()
+		throw UnsupportedOperationException("HispNameSpace::eval can not be called")
 	}
 }
 

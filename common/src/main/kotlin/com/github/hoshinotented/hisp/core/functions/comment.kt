@@ -8,7 +8,7 @@ object Comment : HispFunction(
 	emptyHispList, internalData
 ) {
 	override fun eval(namespace : HispNameSpace) : HispObject {
-		//TODO Nothing!!
+		//DO NOTHING!!
 		return hispString("COMMENT")
 	}
 }
