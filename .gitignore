@@ -1,0 +1,11 @@
+# idea
+.idea
+*.iml
+
+# Gradle
+.gradle
+gradle.properties
+
+# Output
+build
+out

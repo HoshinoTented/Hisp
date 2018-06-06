@@ -1,0 +1,20 @@
+buildscript {
+    ext.kotlinVersion = '1.2.41'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+allprojects {
+    group = 'com.github.HoshinoTented'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        jcenter()
+    }
+}
