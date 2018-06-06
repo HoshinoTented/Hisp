@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName", "unused")
+
 import com.github.hoshinotented.lisp.core.*
 import com.github.hoshinotented.lisp.core.functions.LispWriter
 import com.github.hoshinotented.lisp.core.functions.installConsoleFunctions
@@ -7,7 +9,6 @@ import com.github.hoshinotented.lisp.parser.LispParser
 import com.github.hoshinotented.lisp.parser.LispToken
 import com.github.hoshinotented.lisp.parser.LispTokenType
 import org.junit.Test
-import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.io.StringWriter
 import kotlin.test.assertEquals
