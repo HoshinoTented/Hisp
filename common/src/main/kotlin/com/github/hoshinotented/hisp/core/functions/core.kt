@@ -67,6 +67,7 @@ object Div : Compute("/", Double::div)
 fun installCoreFunctions(globals : HispNameSpace) {
 	listOf(
 		DefineFunction,
+		SetQ,
 		Add,
 		Minus,
 		Times,
