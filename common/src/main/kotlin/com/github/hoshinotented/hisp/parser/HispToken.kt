@@ -1,6 +1,6 @@
-package com.github.hoshinotented.lisp.parser
+package com.github.hoshinotented.hisp.parser
 
-enum class LispTokenType {
+enum class HispTokenType {
 	L_PAREN,
 	R_PAREN,
 	QUOTE,
@@ -12,8 +12,8 @@ enum class LispTokenType {
 
 data class MetaData(val index : Int)
 
-data class LispToken(val type : LispTokenType, val text : String, val data : MetaData) {
-	override fun equals(other : Any?) : Boolean = (other as? LispToken)?.let { otherToken ->
+data class HispToken(val type : HispTokenType, val text : String, val data : MetaData) {
+	override fun equals(other : Any?) : Boolean = (other as? HispToken)?.let { otherToken ->
 		type == otherToken.type && text == otherToken.text
 	} ?: false
 

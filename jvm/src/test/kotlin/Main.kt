@@ -1,22 +1,25 @@
-import com.github.hoshinotented.lisp.core.emptyLispMap
-import com.github.hoshinotented.lisp.core.functions.LispWriter
-import com.github.hoshinotented.lisp.core.functions.installConsoleFunctions
-import com.github.hoshinotented.lisp.core.lispNameSpace
-import com.github.hoshinotented.lisp.parser.LispLexer
-import com.github.hoshinotented.lisp.parser.LispParser
+import com.github.hoshinotented.hisp.core.HispWriter
+import com.github.hoshinotented.hisp.core.emptyHispMap
+import com.github.hoshinotented.hisp.core.functions.installConsoleFunctions
+import com.github.hoshinotented.hisp.core.functions.installCoreFunctions
+import com.github.hoshinotented.hisp.core.hispNameSpace
+import com.github.hoshinotented.hisp.parser.HispLexer
+import com.github.hoshinotented.hisp.parser.HispParser
 import java.io.OutputStreamWriter
 
 fun main(args : Array<String>) {
 	val code = """
-		(putStr "Hello world!")
+		(defun sayHelloWorld () (putStrLn "Hello world!"))
+		(sayHelloWorld)
 	""".trimIndent()
 
-	val namespace = lispNameSpace(mutableMapOf())
-	val lexer = LispLexer(code)
-	val parser = LispParser(lexer)
+	val namespace = hispNameSpace(mutableMapOf())
+	val lexer = HispLexer(code)
+	val parser = HispParser(lexer)
 	val executable = parser.startParse()
 
-	installConsoleFunctions(namespace, LispWriter(OutputStreamWriter(System.out)))
+	installCoreFunctions(namespace)
+	installConsoleFunctions(namespace, HispWriter(OutputStreamWriter(System.out)))
 
-	executable.eval(namespace, emptyLispMap)
+	executable.eval(namespace, emptyHispMap)
 }

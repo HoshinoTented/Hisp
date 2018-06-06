@@ -6,6 +6,22 @@
 </head>
 <body>
 <script src="build/out/kotlin.js"></script>
-<script src="build/out/js.js"></script>
+<script src="build/out/HispJS.js"></script>
+<script>
+    // language=Lice
+    var code = "(defun sayHelloWorld () (putStrLn \"Hello world!\"))\n\n(sayHelloWorld)";
+    var namespace = HispJS.com.github.hoshinotented.hisp.core.emptyHispMap;
+    var lexer = new HispJS.com.github.hoshinotented.hisp.parser.HispLexer(code);
+    var parser = new HispJS.com.github.hoshinotented.hisp.parser.HispParser(lexer);
+    var executable = parser.startParse();
+    var writer = new HispJS.com.github.hoshinotented.hisp.core.HispWriter("");
+
+    HispJS.com.github.hoshinotented.hisp.core.functions.installCoreFunctions_37qz2u$(namespace);
+    HispJS.com.github.hoshinotented.hisp.core.functions.installConsoleFunctions_gdys82$(namespace, writer);
+
+    executable.eval_9jrmdw$(namespace, HispJS.com.github.hoshinotented.hisp.core.emptyHispMap);
+
+    alert(writer.str);
+</script>
 </body>
 </html>

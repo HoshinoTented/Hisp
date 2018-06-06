@@ -1,8 +1,8 @@
-package com.github.hoshinotented.lisp.parser
+package com.github.hoshinotented.hisp.parser
 
-import com.github.hoshinotented.lisp.core.LispUnExpectedException
+import com.github.hoshinotented.hisp.core.HispUnExpectedException
 
-class LispLexer(val sourceCode : String) {
+class HispLexer(val sourceCode : String) {
 	companion object {
 		const val EOF = '\u0000'
 		const val L_PAREN = '('
@@ -29,14 +29,14 @@ class LispLexer(val sourceCode : String) {
 		} while (currentChar <= ' ' && currentChar != EOF)
 	}
 
-	private fun newToken(type : LispTokenType, strValue : String) = LispToken(type, strValue, currentData)
-	private fun newToken(type : LispTokenType, char : Char) = LispToken(type, char.toString(), currentData)
-	private fun unexcepted(excepted : Char, but : Char) = LispUnExpectedException(excepted.toString(), but.toString(), currentData)
+	private fun newToken(type : HispTokenType, strValue : String) = HispToken(type, strValue, currentData)
+	private fun newToken(type : HispTokenType, char : Char) = HispToken(type, char.toString(), currentData)
+	private fun unexcepted(excepted : Char, but : Char) = HispUnExpectedException(excepted.toString(), but.toString(), currentData)
 
-	fun startLex() : List<LispToken> {
+	fun startLex() : List<HispToken> {
 		currentIndex = 0
 
-		val tokens = ArrayList<LispToken>()
+		val tokens = ArrayList<HispToken>()
 		while(currentChar != EOF) {
 			if (currentChar <= ' ') nextNotClear()
 			lexList().run(tokens::addAll)
@@ -59,11 +59,11 @@ class LispLexer(val sourceCode : String) {
 		}
 	}
 
-	private fun lexString() : LispToken {
+	private fun lexString() : HispToken {
 		if (currentChar == STR_QUOTE) {
 			next()
 
-			val token = newToken(LispTokenType.STRING, readFullString())
+			val token = newToken(HispTokenType.STRING, readFullString())
 
 			if (currentChar == STR_QUOTE) {
 				next()
@@ -74,24 +74,24 @@ class LispLexer(val sourceCode : String) {
 		throw unexcepted('"', currentChar)
 	}
 
-	private fun lexSymbol() : LispToken = newToken(LispTokenType.SYMBOL, readFullSymbol())
+	private fun lexSymbol() : HispToken = newToken(HispTokenType.SYMBOL, readFullSymbol())
 
-	private fun lexList() : List<LispToken> {
-		val tokens = ArrayList<LispToken>()
+	private fun lexList() : List<HispToken> {
+		val tokens = ArrayList<HispToken>()
 		if (currentChar == L_PAREN) {
-			tokens.add(newToken(LispTokenType.L_PAREN, L_PAREN))
+			tokens.add(newToken(HispTokenType.L_PAREN, L_PAREN))
 
 			while (currentChar != R_PAREN) {
 				nextNotClear()
 				when (currentChar) {
 					L_PAREN -> lexList().run(tokens::addAll)
-					QUOTE -> newToken(LispTokenType.QUOTE, QUOTE).run(tokens::add)
+					QUOTE -> newToken(HispTokenType.QUOTE, QUOTE).run(tokens::add)
 					STR_QUOTE -> lexString().run(tokens::add)
-					else -> lexSymbol().run(tokens::add)
+					else -> lexSymbol().takeIf { it.text != "" }?.run(tokens::add)
 				}
 			}
 
-			tokens.add(newToken(LispTokenType.R_PAREN, R_PAREN))
+			tokens.add(newToken(HispTokenType.R_PAREN, R_PAREN))
 
 			next()
 
