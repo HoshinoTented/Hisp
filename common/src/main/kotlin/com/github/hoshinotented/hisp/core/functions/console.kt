@@ -5,22 +5,18 @@ package com.github.hoshinotented.hisp.core.functions
 import com.github.hoshinotented.hisp.core.*
 
 abstract class AbstractPutStr(name : String, val out : HispWriter) : HispFunction(
-	hispSymbol(name),
-	hispList(hispSymbol("str")),
+	hispReference(name),
+	hispList(hispReference("str")),
 	emptyHispList, internalData) {
 
 	protected abstract fun append(str : CharSequence)
 
 	private fun putStr(namespace : HispNameSpace, str : HispObject?) {
-		str ?: throw HispNoSuchFieldException(hispSymbol("str"), data)
+		str ?: throw HispNoSuchFieldException(hispReference("str"), data)
 
 		when (str) {
-			is HispSymbol -> {
-				putStr(namespace, namespace[str]?.eval(namespace))
-			}
-
-			is HispList -> {
-				putStr(namespace, str.eval(namespace))
+			is HispList, is HispReference -> {
+				putStr(namespace, str.eval(namespace, emptyHispList))
 			}
 
 			is HispString, is HispFunction, is HispNumber -> {
@@ -29,8 +25,8 @@ abstract class AbstractPutStr(name : String, val out : HispWriter) : HispFunctio
 		}
 	}
 
-	override fun eval(namespace : HispNameSpace) : HispObject {
-		val str = namespace[hispSymbol("str")]!!
+	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
+		val str = args[0]
 
 		putStr(namespace, str)
 

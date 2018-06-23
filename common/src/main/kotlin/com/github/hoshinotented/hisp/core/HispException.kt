@@ -6,6 +6,11 @@ import com.github.hoshinotented.hisp.parser.HispTokenType
 import com.github.hoshinotented.hisp.parser.MetaData
 import kotlin.reflect.KClass
 
+interface UnExpectedException<T> {
+	val expected : T
+	val but : T
+}
+
 open class HispException(message : String, val data : MetaData) : Exception(message)
 
 // Lex
@@ -18,6 +23,6 @@ open class HispUnExpectedTokenException(val excepted : HispTokenType, val but : 
 
 //AST
 open class HispRuntimeException(message: String, data : MetaData) : HispException("Runtime Error (data: $data): $message", data)
-open class HispFunctionArgumentsException(val inputCount : Int, val function : HispFunction, data : MetaData) : HispRuntimeException("Need ${function.parameters.values.size} argument(s), but got $inputCount", data)
-open class HispUnExpectedTypeException(val excepted : KClass<*>, val but : KClass<*>, data : MetaData) : HispRuntimeException("Type not match, excepted: $excepted, but got: $but", data)
-open class HispNoSuchFieldException(val name : HispSymbol, data : MetaData) : HispRuntimeException("No field found by name: $name", data)
+open class HispNoSuchFunctionException(override val expected : HispList, override val but : HispList, data : MetaData) : HispRuntimeException("excepted: ${expected.values} argument(s), but got ${but.values}", data), UnExpectedException<HispList>
+open class HispUnExpectedTypeException(val excepted : KClass<*>, val but : KClass<*>, data : MetaData) : HispRuntimeException("Type not match, excepted: ${excepted.simpleName}, but got: ${but.simpleName}", data)
+open class HispNoSuchFieldException(val name : HispReference, data : MetaData) : HispRuntimeException("No field found by name: $name", data)

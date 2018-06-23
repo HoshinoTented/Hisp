@@ -3,11 +3,11 @@ package com.github.hoshinotented.hisp.core.functions
 import com.github.hoshinotented.hisp.core.*
 
 object Comment : HispFunction(
-	hispSymbol("#"),
-	hispList(hispSymbol("comment")),
+	hispReference("#"),
+	hispList(hispReference("comment")),
 	emptyHispList, internalData
 ) {
-	override fun eval(namespace : HispNameSpace) : HispObject {
+	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
 		//DO NOTHING!!
 		return hispString("COMMENT")
 	}

@@ -6,4 +6,5 @@ val kotlinVersion : String by rootProject.extra
 
 dependencies {
     compile(kotlin("stdlib-common", kotlinVersion))
+	compile(kotlin("reflect", kotlinVersion))
 }

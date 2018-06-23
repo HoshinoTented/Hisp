@@ -20,14 +20,7 @@ dependencies {
 val assembleWeb = task<Sync>("assembleWeb") {
 	group = assemble.group
 	configurations.compile.forEach { file ->
-		from(zipTree(file.absolutePath)/*, Callable { BRING BUG!!
-			includeEmptyDirs = false
-			include { fileTreeElement ->
-				val path = fileTreeElement.path
-				path.endsWith(".js") && (path.startsWith("META-INF/resources/") ||
-					!path.startsWith("META-INF/"))
-			}
-		}*/)
+		from(zipTree(file.absolutePath))
 	}
 
 	from(compileKotlin2Js.destinationDir)

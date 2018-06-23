@@ -1,6 +1,6 @@
 buildscript {
 	var kotlinVersion : String by extra
-	kotlinVersion = "1.2.41"
+	kotlinVersion = "1.2.50"
 
 	repositories {
 		mavenCentral()

@@ -10,7 +10,7 @@
 <script>
     // language=Lice
     var code = "(defun sayHelloWorld () (putStrLn \"Hello world!\"))\n\n(sayHelloWorld)";
-    var namespace = HispJS.com.github.hoshinotented.hisp.core.emptyHispMap;
+    var namespace = HispJS.com.github.hoshinotented.hisp.core.emptyHispNamespace;
     var lexer = new HispJS.com.github.hoshinotented.hisp.parser.HispLexer(code);
     var parser = new HispJS.com.github.hoshinotented.hisp.parser.HispParser(lexer);
     var executable = parser.startParse();
@@ -19,7 +19,7 @@
     HispJS.com.github.hoshinotented.hisp.core.functions.installCoreFunctions_37qz2u$(namespace);
     HispJS.com.github.hoshinotented.hisp.core.functions.installConsoleFunctions_gdys82$(namespace, writer);
 
-    executable.eval_9jrmdw$(namespace, HispJS.com.github.hoshinotented.hisp.core.emptyHispMap);
+    executable.eval_9jrmdw$(namespace, HispJS.com.github.hoshinotented.hisp.core.emptyHispNamespace);
 
     alert(writer.str);
 </script>

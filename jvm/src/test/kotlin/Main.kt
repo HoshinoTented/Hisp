@@ -1,24 +1,36 @@
 import com.github.hoshinotented.hisp.core.HispWriter
-import com.github.hoshinotented.hisp.core.functions.installCommentPlugins
-import com.github.hoshinotented.hisp.core.functions.installConsolePlugins
-import com.github.hoshinotented.hisp.core.functions.installCorePlugins
+import com.github.hoshinotented.hisp.core.emptyHispList
+import com.github.hoshinotented.hisp.core.functions.*
 import com.github.hoshinotented.hisp.core.hispNameSpace
 import com.github.hoshinotented.hisp.parser.HispLexer
 import com.github.hoshinotented.hisp.parser.HispParser
 import java.io.OutputStreamWriter
 
+/*
+*         if(b==0) return a;
+	return a % b == 0 ? b : GCD(b, a % b);*/
+
+/*
+		(defun sum (a)
+			(if (= a 2)
+				1
+				(+ 1 (sum (+ a 1)))))
+
+		(putStrLn (sum 0))*/
+
 fun main(args : Array<String>) {
 	val code = """
-		(set a 1)
-		(set b 2)
-		(defun add (a b)
-			(+ a b))
+		(defun gcd (a b)
+			(if (= b 0)
+				a
+				(if (= (% a b) 0)
+					b
+					(gcd b (% a b))
+				)
+			)
+		)
 
-		(putStrLn (add a b))
-
-		(del putStrLn)
-		(# "putStr will be invalid")
-		(putStr b)
+		(putStrLn (gcd 15 30))
 	""".trimIndent()
 
 	val namespace = hispNameSpace(mutableMapOf())
@@ -28,9 +40,12 @@ fun main(args : Array<String>) {
 	val executable = parser.startParse(tokens)
 
 	installCorePlugins(namespace)
+	installMathPlugins(namespace)
+	installConditionPlugins(namespace)
+	installProcessControlPlugins(namespace)
 	installCommentPlugins(namespace)
 	installConsolePlugins(namespace, HispWriter(OutputStreamWriter(System.out)))
 
 	println("Tokens: $tokens")
-	executable.eval(namespace)
+	executable.eval(namespace, emptyHispList)
 }

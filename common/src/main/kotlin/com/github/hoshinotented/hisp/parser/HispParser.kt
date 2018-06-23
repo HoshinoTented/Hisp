@@ -41,11 +41,11 @@ class HispParser(val lexer : HispLexer) {
 				next()
 
 				if (currentToken.type != HispTokenType.EOF) {
-					HispList(listOf(HispSymbol("quote", currentToken.data), parseToken()), currentToken.data)
+					HispList(listOf(HispReference("quote", currentToken.data), parseToken()), currentToken.data)
 				} else throw HispUnExpectedTokenException(HispTokenType.ANY, HispTokenType.EOF, currentData)
 			}
 
-			HispTokenType.SYMBOL -> HispSymbol(currentToken.text, currentToken.data)
+			HispTokenType.SYMBOL -> HispReference(currentToken.text, currentToken.data)
 			HispTokenType.STRING -> HispString(currentToken.text, currentToken.data)
 
 			else -> throw RuntimeException("Internal Error")

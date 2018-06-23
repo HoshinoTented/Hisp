@@ -4,6 +4,7 @@ import com.github.hoshinotented.hisp.core.*
 import com.github.hoshinotented.hisp.core.functions.installCommentPlugins
 import com.github.hoshinotented.hisp.core.functions.installConsolePlugins
 import com.github.hoshinotented.hisp.core.functions.installCorePlugins
+import com.github.hoshinotented.hisp.core.functions.installMathPlugins
 import com.github.hoshinotented.hisp.parser.HispLexer
 import com.github.hoshinotented.hisp.parser.HispParser
 import com.github.hoshinotented.hisp.parser.HispToken
@@ -104,42 +105,42 @@ class HispTest {
 			HispExecutable(
 				listOf(
 					hispList(
-						hispSymbol("set"),
-						hispSymbol("a"),
-						hispSymbol("1")
+						hispReference("set"),
+						hispReference("a"),
+						hispReference("1")
 					),
 
 					hispList(
-						hispSymbol("set"),
-						hispSymbol("b"),
-						hispSymbol("2")
+						hispReference("set"),
+						hispReference("b"),
+						hispReference("2")
 					),
 
 					hispList(
-						hispSymbol("defun"),
-						hispSymbol("add"),
+						hispReference("defun"),
+						hispReference("add"),
 						hispList(
-							hispSymbol("a"), hispSymbol("b")
+							hispReference("a"), hispReference("b")
 						),
 
 						hispList(
-							hispSymbol("+"), hispSymbol("a"), hispSymbol("b")
+							hispReference("+"), hispReference("a"), hispReference("b")
 						)
 					),
 
 					hispList(
-						hispSymbol("putStrLn"),
-						hispList(hispSymbol("add"), hispSymbol("a"), hispSymbol("b"))
+						hispReference("putStrLn"),
+						hispList(hispReference("add"), hispReference("a"), hispReference("b"))
 					),
 
 					hispList(
-						hispSymbol("#"),
+						hispReference("#"),
 						hispString("putStr will be invalid")
 					),
 
 					hispList(
-						hispSymbol("putStr"),
-						hispSymbol("b")
+						hispReference("putStr"),
+						hispReference("b")
 					)
 				)
 			), executable
@@ -148,17 +149,18 @@ class HispTest {
 
 	@Test
 	fun execute() {
-		val namespace = emptyHispMap
+		val namespace = emptyHispNamespace
 		val lexer = HispLexer(code)
 		val parser = HispParser(lexer)
 		val executable = parser.startParse()
 		val out = StringWriter()
 
 		installCorePlugins(namespace)
+		installMathPlugins(namespace)
 		installCommentPlugins(namespace)
 		installConsolePlugins(namespace, HispWriter(out))
 
-		executable.eval(namespace)
+		executable.eval(namespace, emptyHispList)
 
 		assertEquals("3.0\n2.0", out.toString())
 	}

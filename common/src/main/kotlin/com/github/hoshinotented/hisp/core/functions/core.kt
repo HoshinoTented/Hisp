@@ -5,88 +5,62 @@ package com.github.hoshinotented.hisp.core.functions
 import com.github.hoshinotented.hisp.core.*
 
 object DefineFunction : HispFunction(
-	hispSymbol("defun"),
+	hispReference("defun"),
 	hispList(
-		hispSymbol("functionName"),
-		hispSymbol("parameters"),
-		hispSymbol("body")),
+		hispReference("functionName"),
+		hispReference("parameters"),
+		hispReference("body...")),
 	emptyHispList, internalData) {
-	override fun eval(namespace : HispNameSpace) : HispObject {
-		val name = namespace[parameters.values[0]] as HispSymbol
-		val arguments = namespace[parameters.values[1]] as HispList
-		val body = namespace[parameters.values[2]] as HispList
-
-		return HispFunction(name, arguments, body, namespace.data).apply {
+	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
+		val name = args[0] as HispReference
+		val parameters = args[1] as HispList
+		val body = args[2] as HispList
+		return HispFunction(name, parameters, body, data).apply {
 			namespace[name] = this
 		}
 	}
 }
 
 object SetQ : HispFunction(
-	hispSymbol("set"),
+	hispReference("set"),
 	hispList(
-		hispSymbol("name"),
-		hispSymbol("target")),
+		hispReference("name"),
+		hispReference("target")),
 	emptyHispList, internalData) {
-	override fun eval(namespace : HispNameSpace) : HispObject {
-		val name = namespace[parameters.values[0]]!!.cast<HispSymbol>()
-		val target = namespace[parameters.values[1]]!!
-
-		namespace[name] = when (target) {
-			is HispSymbol -> namespace[target] ?: throw HispNoSuchFieldException(target, target.data)
+	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
+		val name = args[0] as HispReference
+		val target = args[1]
+		val realValue = when (target) {
+			is HispReference -> target.eval(namespace, emptyHispList)
 			else -> target
 		}
 
-		return name
+		namespace[name] = realValue
+
+		return realValue
 	}
 }
 
 object DelQ : HispFunction(
-	hispSymbol("del"),
+	hispReference("del"),
 	hispList(
-		hispSymbol("name")
+		hispReference("name")
 	),
 	emptyHispList, internalData) {
-	override fun eval(namespace : HispNameSpace) : HispObject {
-		val name = namespace[parameters.values[0]]!!.cast<HispSymbol>()
+	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
+		val name = args[0]
+		val value = name.eval(namespace, emptyHispList)
 
 		namespace.remove(name)
 
-		return name
+		return value
 	}
 }
-
-open class Compute(symbol : String, val action : Double.(Double) -> Double) : HispFunction(
-	hispSymbol(symbol),
-	hispList(
-		hispSymbol("a"),
-		hispSymbol("b")),
-	emptyHispList, internalData) {
-
-	final override fun eval(namespace : HispNameSpace) : HispObject {
-		val a = namespace[parameters.values[0]]!!
-		val b = namespace[parameters.values[1]]!!
-
-		val aValue = a.eval(namespace).cast<HispNumber>()
-		val bValue = b.eval(namespace).cast<HispNumber>()
-
-		return hispNumber(action(aValue.number, bValue.number))
-	}
-}
-
-object Add : Compute("+", Double::plus)
-object Minus : Compute("-", Double::minus)
-object Times : Compute("*", Double::times)
-object Div : Compute("/", Double::div)
 
 fun installCorePlugins(globals : HispNameSpace) {
 	listOf(
 		DefineFunction,
 		SetQ,
-		DelQ,
-		Add,
-		Minus,
-		Times,
-		Div
+		DelQ
 	).install(globals)
 }
