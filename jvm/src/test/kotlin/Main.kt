@@ -30,7 +30,7 @@ fun main(args : Array<String>) {
 			)
 		)
 
-		(putStrLn (gcd 15 30))
+		(putStrLn (gcd 25 15))
 	""".trimIndent()
 
 	val namespace = hispNameSpace(mutableMapOf())

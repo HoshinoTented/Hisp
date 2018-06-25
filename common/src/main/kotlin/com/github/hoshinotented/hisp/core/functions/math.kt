@@ -10,8 +10,8 @@ abstract class Compute(symbol : String, val action : Double.(Double) -> Double) 
 	emptyHispList, internalData) {
 
 	final override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
-		val a = args[0].evalToBottom(namespace, emptyHispList).cast<HispNumber>()
-		val b = args[1].evalToBottom(namespace, emptyHispList).cast<HispNumber>()
+		val a = args[0].eval(namespace, emptyHispList).cast<HispNumber>()
+		val b = args[1].eval(namespace, emptyHispList).cast<HispNumber>()
 
 		return hispNumber(action(a.number, b.number))
 	}

@@ -12,13 +12,3 @@ fun hispList(elements : List<HispObject>) = HispList(elements, internalData)
 fun hispString(value : String) = HispString(value, internalData)
 fun hispNameSpace(map : MutableMap<HispReference, HispObject>) = HispNameSpace(map, null, internalData)
 fun hispNumber(value : Double) = HispNumber(value, internalData)
-
-//求值到底（
-fun HispObject.evalToBottom(nameSpace : HispNameSpace, args : HispList) : HispObject {
-	var value = eval(nameSpace, args)
-	if (value !is HispNumber && value !is HispString) {
-		value = value.eval(nameSpace, emptyHispList)
-	}
-
-	return value
-}

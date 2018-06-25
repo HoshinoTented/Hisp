@@ -7,8 +7,8 @@ abstract class Compare(name : String, val closure : (HispNumber, HispNumber) -> 
 	hispList(hispReference("a"), hispReference("b")),
 	emptyHispList, internalData) {
 	override fun eval(namespace : HispNameSpace, args : HispList) : HispObject {
-		val a = args[0].evalToBottom(namespace, emptyHispList)
-		val b = args[1].evalToBottom(namespace, emptyHispList)
+		val a = args[0].eval(namespace, emptyHispList)
+		val b = args[1].eval(namespace, emptyHispList)
 		val number = if (closure(a.cast(), b.cast())) 1.0 else 0.0
 
 		return HispNumber(number, internalData)
